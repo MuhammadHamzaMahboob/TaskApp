@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 const TaskForm = ({ onAddTask }) => {
+
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [titleError, setTitleError] = useState('');
@@ -8,8 +9,6 @@ const TaskForm = ({ onAddTask }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // Perform validations
     if (!title) {
       setTitleError('Task title is required.');
       return;
@@ -22,15 +21,9 @@ const TaskForm = ({ onAddTask }) => {
       setDescriptionError('Task description cannot exceed 500 characters.');
       return;
     }
-
-    // Reset errors
     setTitleError('');
     setDescriptionError('');
-
-    // Add the task
     onAddTask({ title, description });
-
-    // Clear the input fields
     setTitle('');
     setDescription('');
   };
