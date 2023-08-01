@@ -14,7 +14,7 @@
 
   Then install mongodb moongoose in your pc and connect the database localhost.
 
-  Start the project by run command npm run dev/npm start.
+  Start the project by run command  nodemon app.js.
 
   Enjoyed it Thanks
 
