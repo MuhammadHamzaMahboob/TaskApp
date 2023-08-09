@@ -1,8 +1,12 @@
 import bcrypt from 'bcryptjs';
 import User from '../models/User.js';
 import jwt from 'jsonwebtoken';
+import {
+  refreshTokenSecret,
+  accessTokenExpiresIn,
+  refreshTokenExpiresIn
+} from '../config.js';
 import secretKey from '../config.js';
-
 export const signup = async (req, res, next) => {
   const { name, email, password, group } = req.body;
 
@@ -37,12 +41,25 @@ export const signup = async (req, res, next) => {
   } catch (err) {
     return res.status(500).json({ message: 'Signup failed. Please try again later.' });
   }
-  const token = jwt.sign(
+  const accessToken = jwt.sign(
     { userId: user.id, email: user.email },
     secretKey,
-    { expiresIn: '1h' } // Token will expire in 1 hour
+    { expiresIn: accessTokenExpiresIn }
   );
-  return res.status(201).json({ user, token });
+
+  const refreshToken = jwt.sign(
+    { userId: user.id, email: user.email },
+    refreshTokenSecret,
+    { expiresIn: refreshTokenExpiresIn }
+  );
+
+  return res.status(201).json({ user, accessToken, refreshToken });
+  // const token = jwt.sign(
+  //   { userId: user.id, email: user.email },
+  //   secretKey,
+  //   { expiresIn: '1h' } // Token will expire in 1 hour
+  // );
+  // return res.status(201).json({ user, token });
 };
 
 
@@ -71,16 +88,29 @@ export const login = async (req, res, next) => {
   if (!passwordMatch) {
     return res.status(401).json({ message: 'Invalid credentials. Please try again.' });
   }
-
-  const token = jwt.sign(
+  const accessToken = jwt.sign(
     { userId: user.id, email: user.email },
     secretKey,
-    { expiresIn: '1h' } // Token will expire in 1 hour
+    { expiresIn: accessTokenExpiresIn }
   );
 
+  const refreshToken = jwt.sign(
+    { userId: user.id, email: user.email },
+    refreshTokenSecret,
+    { expiresIn: refreshTokenExpiresIn }
+  );
+
+  return res.status(200).json({ message: 'Login successful!', user, accessToken, refreshToken });
+
+  // const token = jwt.sign(
+  //   { userId: user.id, email: user.email },
+  //   secretKey,
+  //   { expiresIn: '1h' } // Token will expire in 1 hour
+  // );
 
 
-  return res.status(200).json({ message: 'Login successful!', user, token });
+
+  // return res.status(200).json({ message: 'Login successful!', user, token });
 };
 
 export const getAllUser = async (req, res, next) => {
@@ -95,3 +125,17 @@ export const getAllUser = async (req, res, next) => {
   }
   return res.status(200).json({ users })
 };
+// import axios from 'axios';
+
+// const refreshToken = async (refreshToken) => {
+//   try {
+//     const response = await axios.post('/refresh-token', { refreshToken });
+//     return response.data.accessToken;
+//   } catch (error) {
+//     console.log('Refresh token failed:', error);
+//     throw error;
+//   }
+// };
+
+// // Usage
+// const newAccessToken = await refreshToken(existingRefreshToken);
