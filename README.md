@@ -14,6 +14,19 @@
 
   Then install mongodb moongoose in your pc and connect the database localhost.
 
+
+  Start the project by run command npm run dev/npm start.
+
+  Enjoyed it Thanks
+
+# flow/Functionality of App
+
+  User sign up the app and also select the  group.
+
+  Then he will see or add the tasks other members also who have in the same group.
+
+
+
   Start the project by run command npm run dev/npm start.
 
   Enjoyed it Thanks

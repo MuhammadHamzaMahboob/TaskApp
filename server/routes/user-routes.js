@@ -8,6 +8,7 @@ const router = express.Router();
 router.get("/", getAllUser);
 router.post("/signup", signup)
 router.post("/login", login)
+
 router.post('/refresh-token', async (req, res) => {
   const refreshToken = req.body.refreshToken;
 
@@ -26,4 +27,5 @@ router.post('/refresh-token', async (req, res) => {
     return res.status(401).json({ message: 'Invalid refresh token.' });
   }
 });
+
 export default router;

@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs';
 import User from '../models/User.js';
+
 import jwt from 'jsonwebtoken';
 import {
   refreshTokenSecret,
@@ -7,6 +8,9 @@ import {
   refreshTokenExpiresIn
 } from '../config.js';
 import secretKey from '../config.js';
+import jwt from 'jsonwebtoken';
+import secretKey from '../config.js';
+
 export const signup = async (req, res, next) => {
   const { name, email, password, group } = req.body;
 
@@ -41,6 +45,7 @@ export const signup = async (req, res, next) => {
   } catch (err) {
     return res.status(500).json({ message: 'Signup failed. Please try again later.' });
   }
+
   const accessToken = jwt.sign(
     { userId: user.id, email: user.email },
     secretKey,
@@ -60,6 +65,14 @@ export const signup = async (req, res, next) => {
   //   { expiresIn: '1h' } // Token will expire in 1 hour
   // );
   // return res.status(201).json({ user, token });
+
+  const token = jwt.sign(
+    { userId: user.id, email: user.email },
+    secretKey,
+    { expiresIn: '1h' } // Token will expire in 1 hour
+  );
+  return res.status(201).json({ user, token });
+
 };
 
 
@@ -88,6 +101,7 @@ export const login = async (req, res, next) => {
   if (!passwordMatch) {
     return res.status(401).json({ message: 'Invalid credentials. Please try again.' });
   }
+
   const accessToken = jwt.sign(
     { userId: user.id, email: user.email },
     secretKey,
@@ -111,6 +125,17 @@ export const login = async (req, res, next) => {
 
 
   // return res.status(200).json({ message: 'Login successful!', user, token });
+
+
+  const token = jwt.sign(
+    { userId: user.id, email: user.email },
+    secretKey,
+    { expiresIn: '1h' } // Token will expire in 1 hour
+  );
+
+  return res.status(200).json({ message: 'Login successful!', user, token });
+
+
 };
 
 export const getAllUser = async (req, res, next) => {
@@ -125,6 +150,7 @@ export const getAllUser = async (req, res, next) => {
   }
   return res.status(200).json({ users })
 };
+
 // import axios from 'axios';
 
 // const refreshToken = async (refreshToken) => {
@@ -139,3 +165,5 @@ export const getAllUser = async (req, res, next) => {
 
 // // Usage
 // const newAccessToken = await refreshToken(existingRefreshToken);
+=======
+
